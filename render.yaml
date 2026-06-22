@@ -1,0 +1,28 @@
+# Render Blueprint. In the Render dashboard: New > Blueprint > pick this repo.
+# Postgres is provided by Neon (free, persistent) via DATABASE_URL, so no
+# Render database block here.
+services:
+  - type: web
+    name: medalgo-hub
+    runtime: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 3"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"
+      - key: SECRET_KEY
+        generateValue: true          # Render generates a strong secret
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"        # leading dot = matches your *.onrender.com host
+      - key: DATABASE_URL
+        sync: false                   # paste the Neon connection string in the dashboard
+      # Optional first-deploy admin (set these in the dashboard, or skip):
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false
+      - key: DJANGO_SUPERUSER_EMAIL
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false
