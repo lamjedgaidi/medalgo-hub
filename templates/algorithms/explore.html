@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Explore · MedAlgo Hub{% endblock %}
+{% block breadcrumb %}Discover / Explore{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-semibold text-accent-ink mb-1">Explore algorithms</h1>
+<p class="text-slate-500 mb-5">Search the registry. Read about each algorithm, see its versions and how to reproduce it.</p>
+
+<!-- Live search: HTMX posts the form on keystroke/change and swaps #results. -->
+<form hx-get="{% url 'algorithms:explore' %}"
+      hx-target="#results"
+      hx-swap="outerHTML"
+      hx-trigger="keyup changed delay:300ms from:input[name='q'], change from:select"
+      hx-push-url="true"
+      class="bg-white rounded-xl border border-slate-200 p-3 mb-5 flex flex-wrap gap-3 items-center">
+  <input type="search" name="q" value="{{ q }}" placeholder="Search algorithms…"
+         class="flex-1 min-w-[200px] px-3 py-2 rounded-lg border border-slate-200 focus:border-accent outline-none text-sm">
+  <select name="kind" class="px-3 py-2 rounded-lg border border-slate-200 text-sm">
+    <option value="">All categories</option>
+    {% for c in categories %}
+      <option value="{{ c.kind }}" {% if c.kind == active_kind %}selected{% endif %}>{{ c.label }}</option>
+    {% endfor %}
+  </select>
+  <select name="field" class="px-3 py-2 rounded-lg border border-slate-200 text-sm">
+    <option value="">All fields</option>
+    {% for value, label in fields %}
+      <option value="{{ value }}" {% if value == active_field %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <span class="htmx-indicator text-xs text-slate-400">searching…</span>
+</form>
+
+{% include "algorithms/_results.html" %}
+{% endblock %}

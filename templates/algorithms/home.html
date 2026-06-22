@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}MedAlgo Hub{% endblock %}
+{% block breadcrumb %}Home{% endblock %}
+
+{% block content %}
+<section class="mb-8">
+  <h1 class="text-3xl font-semibold text-accent-ink">Share, read, and reproduce algorithms.</h1>
+  <p class="text-slate-500 mt-2 max-w-2xl">
+    An open registry where researchers publish algorithms, others read about them and reproduce them.
+    We host the knowledge and the pointers — the code and data stay where they live.
+  </p>
+  <div class="mt-4 flex gap-3">
+    <a href="{% url 'algorithms:explore' %}" class="px-4 py-2 rounded-lg bg-accent text-white text-sm hover:opacity-90">Browse {{ total }} algorithms</a>
+  </div>
+</section>
+
+{% if featured %}
+<section class="mb-8">
+  <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-400 mb-3">Most installed</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    {% for algorithm in featured %}{% include "algorithms/_card.html" %}{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section>
+  <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-400 mb-3">Categories</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+    {% for c in categories %}
+      <a href="{% url 'algorithms:explore' %}?kind={{ c.kind }}"
+         class="bg-white rounded-xl border border-slate-200 p-3 hover:border-accent transition">
+        <p class="font-medium text-accent-ink text-sm">{{ c.label }}</p>
+        <p class="text-xs text-slate-500 mt-1 line-clamp-2">{{ c.description }}</p>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}MedAlgo Hub{% endblock %}</title>
+
+  <!-- DEV: Tailwind Play CDN + HTMX. For prod, build CSS with the Tailwind
+       standalone CLI (no Node) and drop these CDN tags. See README. -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { accent: { DEFAULT: "#3f6fd1", ink: "#2a3142" } } } }
+    }
+  </script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .htmx-request.htmx-indicator { opacity: 1; }
+    .htmx-indicator { opacity: 0; transition: opacity .2s; }
+  </style>
+</head>
+<body class="bg-[#f6f7f9] text-slate-800 min-h-screen">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-56 shrink-0 border-r border-slate-200 bg-white px-4 py-5 hidden md:block">
+      <a href="{% url 'algorithms:home' %}" class="flex items-center gap-2 mb-6">
+        <span class="grid place-items-center w-8 h-8 rounded-lg bg-accent text-white font-bold">M</span>
+        <span class="font-semibold text-accent-ink">MedAlgo Hub</span>
+      </a>
+      <nav class="space-y-1 text-sm">
+        <a href="{% url 'algorithms:home' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Home</a>
+        <a href="{% url 'algorithms:explore' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-100">Explore</a>
+        <a href="/admin/" class="block px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-400">Admin</a>
+      </nav>
+      <p class="mt-8 text-xs text-slate-400 leading-relaxed">
+        A registry &amp; knowledge layer. We host metadata and pointers — never the code, weights, or data.
+      </p>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 min-w-0">
+      <header class="border-b border-slate-200 bg-white/80 backdrop-blur px-6 py-3 flex items-center justify-between">
+        <div class="text-sm text-slate-500">{% block breadcrumb %}Home{% endblock %}</div>
+        <a href="{% url 'algorithms:explore' %}"
+           class="text-sm px-3 py-1.5 rounded-lg bg-accent text-white hover:opacity-90">Explore algorithms</a>
+      </header>
+      <div class="p-6 max-w-6xl mx-auto">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </div>
+</body>
+</html>
